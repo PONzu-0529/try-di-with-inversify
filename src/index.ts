@@ -1,18 +1,20 @@
 import 'reflect-metadata';
 import { Container } from "inversify";
+import { ContainerHelper } from './ContainerHelper';
 import { IKiiteCafeSupport } from "./IKiiteCafeSupport";
 import { KiiteCafeSupport } from "./KiiteCafeSupport";
 import { KiiteCafeSupportMock } from "./KiiteCafeSupportMock";
 
 (async () => {
     const container = new Container();
-    container.bind('IKiiteCafeSupport').to(KiiteCafeSupport);
 
-    var support = container.get<IKiiteCafeSupport>('IKiiteCafeSupport');
+    ContainerHelper.bind(container, 'KiiteCafeSupport', KiiteCafeSupport);
+
+    var support = ContainerHelper.get<IKiiteCafeSupport>(container, 'KiiteCafeSupport');
     console.log(await support.getNowPlaying());
 
-    container.rebind('IKiiteCafeSupport').to(KiiteCafeSupportMock);
+    ContainerHelper.rebind(container, 'KiiteCafeSupport', KiiteCafeSupportMock);
 
-    var support = container.get<IKiiteCafeSupport>('IKiiteCafeSupport');
+    var support = ContainerHelper.get<IKiiteCafeSupport>(container, 'KiiteCafeSupport');
     console.log(await support.getNowPlaying());
 })();
